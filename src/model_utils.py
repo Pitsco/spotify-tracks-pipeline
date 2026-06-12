@@ -29,7 +29,7 @@ FEATURES = [
 ]
 
 def load_data():
-    df = pd.read_csv("../data/processed/spotify_tracks_cleaned.csv")
+    df = pd.read_csv("data/processed/spotify_tracks_cleaned.csv")
 
     # converts explicit column into integers
     # therefore False = 0 and True = 1
@@ -53,7 +53,7 @@ def load_data():
         X,
         y, 
         test_size = 0.2,
-        random_state = 42
+        random_state = 30
     )
 
 # takes in 5 inputs: model, X_train, X_test, y_train, y_test
@@ -62,7 +62,7 @@ def load_data():
 # X_test = testing song features
 # y_train = actual popularity values of training songs
 # y_test = actualy popularity values of testing songs
-def evalute_model(model, X_train, X_test, y_train, y_test):
+def evaluate_model(model, X_train, X_test, y_train, y_test):
     # trains the model
         # model should be learning that high danceability + high energy = high popularity
         # songs with certain tempos have certain popularity trends
@@ -99,11 +99,12 @@ def save_result(model_name, mae, r2):
 
     # creating a pandas dataframe called result 
     # 3 columns, with their corresponding values
-    result = pd.DataFrame({
+    result = pd.DataFrame([
+        {
         "Model": model_name,
         "MAE": mae,
         "R2 Score": r2
-    })
+    }])
 
     # lower casing and replacing spaces 
     file_name = model_name.lower().replace(" ", "_")
