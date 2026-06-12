@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+import joblib
 
 
 st.title("Spotify Tracks ETL + ML Dashboard")
@@ -65,3 +66,37 @@ best_model = results.sort_values(by="MAE").iloc[0]
 st.write(f"Best model based on MAE: **{best_model['Model']}**")
 st.write(f"MAE: **{best_model['MAE']:.2f}**")
 st.write(f"R² Score: **{best_model['R2 Score']:.2f}**")
+
+model = joblib.load("models/random_forest_model.pkl")
+
+st.header("Predict Popularity for a Custom Track with Random Forest Model")
+
+danceability = st.slider("Danceability", 0.0, 1.0, 0.5)
+energy = st.slider("Energy", 0.0, 1.0, 0.5)
+loudness = st.slider("Loudness", -60.0, 5.0, -10.0)
+speechiness = st.slider("Speechiness", 0.0, 1.0, 0.1)
+acousticness = st.slider("Acousticness", 0.0, 1.0, 0.5)
+instrumentalness = st.slider("Instrumentalness", 0.0, 1.0, 0.0)
+liveness = st.slider("Liveness", 0.0, 1.0, 0.2)
+valence = st.slider("Valence", 0.0, 1.0, 0.5)
+tempo = st.slider("Tempo", 50.0, 250.0, 120.0)
+duration_minutes = st.slider("Duration Minutes", 0.5, 10.0, 3.0)
+explicit = st.selectbox("Explicit?", [0, 1])
+
+input_data = pd.DataFrame([{
+    "danceability": danceability,
+    "energy": energy,
+    "loudness": loudness,
+    "speechiness": speechiness,
+    "acousticness": acousticness,
+    "instrumentalness": instrumentalness,
+    "liveness": liveness,
+    "valence": valence,
+    "tempo": tempo,
+    "duration_minutes": duration_minutes,
+    "explicit": explicit
+}])
+
+prediction = model.predict(input_data)[0]
+
+st.write(f"Predicted Popularity: **{prediction:.2f} / 100**")

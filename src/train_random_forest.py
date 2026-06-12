@@ -1,5 +1,6 @@
 from sklearn.ensemble import RandomForestRegressor
 from model_utils import load_data, evaluate_model, save_result
+import joblib
 
 #loading data 
 X_train, X_test, y_train, y_test = load_data()
@@ -14,5 +15,7 @@ model = RandomForestRegressor(
 mae, r2 = evaluate_model(model, X_train, X_test, y_train, y_test)
 
 save_result("Random Forest", mae, r2)
+
+joblib.dump(model, "models/random_forest_model.pkl")
 
 print(f"Random Forest - MAE: {mae}, R2 Score: {r2}")
